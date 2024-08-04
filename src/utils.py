@@ -6,11 +6,15 @@ import requests
 
 import os
 
+from datetime import datetime
+
 from dotenv import load_dotenv
 
 import pandas as pd
 
 from src.logger import setting_logger
+
+from typing import Optional
 
 logger = setting_logger("utils")
 
@@ -152,3 +156,23 @@ def filter_transactions_by_card(df_transactions: pd.DataFrame) -> list[dict]:
         )
     logger.info("Функция успешно завершила свою работу.")
     return expenses_cards
+
+
+def filter_transactions_by_date(transactions: pd.DataFrame, end_date: Optional[str] = None) -> pd.DataFrame:
+    """Функция, фильтрации транзакций по дате.Формат даты: %d.%m.%Y %H:%M:%S"""
+    logger.info("Функция начала свою работу.")
+    if end_date is None:
+        end_date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    start_date = datetime.strptime(end_date, "%d.%m.%Y %H:%M:%S").replace(day=1)
+    end_date = datetime.strptime(end_date, "%d.%m.%Y %H:%M:%S")
+    transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S")
+    filtered_transactions = transactions[
+        (transactions["Дата операции"] >= start_date) & (transactions["Дата операции"] <= end_date)]
+    filtered_transactions["Дата операции"] = filtered_transactions["Дата операции"].dt.strftime('%d.%m.%Y %H:%M:%S')
+
+    return filtered_transactions
+
+
+tr = read_xlsx_file("D:/My_Project/Course_project_1/data/operations.xlsx")
+
+filter_transactions_by_date(tr, "29.05.2018 23:00:00")

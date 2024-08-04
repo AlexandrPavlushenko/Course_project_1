@@ -8,11 +8,16 @@ from freezegun import freeze_time
 
 from unittest.mock import patch, mock_open, MagicMock
 
+from datetime import datetime
+
 from src.utils import greeting, read_xlsx_file, get_top_five_transactions, fetch_exchange_rates, fetch_stock_prices, \
-    filter_transactions_by_card
+    filter_transactions_by_card, filter_transactions_by_date
 
 import unittest
 
+import pytest
+
+import  time
 
 # Тест функции read_xlsx_file
 @patch('pandas.read_excel')
@@ -143,3 +148,29 @@ def test_filter_transactions_by_card(sample_transactions):
         {"last_digits": "4321", "total_spent": 1500, "cashback": 15.0},
     ]
     assert result == expected_result
+
+
+# Тест функции filter_transactions_by_date
+def test_filter_transactions_by_date(transactions_list):
+    result = filter_transactions_by_date(transactions_list, "30.11.2023 23:00:00").to_dict()
+    expected = {'Дата операции': {2: '21.11.2023 10:00:00'}, 'Сумма': {2: 300}, 'Описание': {2: 'Транзакция 3'}}
+    assert result == expected
+
+def test_filter_transactions_by_date_no_date(transactions_list):
+    result = filter_transactions_by_date(transactions_list).to_dict()
+    print(result)
+    expected = {'Дата операции': {}, 'Сумма': {}, 'Описание': {}}
+    assert result == expected
+
+
+
+
+
+
+
+
+
+
+
+
+
