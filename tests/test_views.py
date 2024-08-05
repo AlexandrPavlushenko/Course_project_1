@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
-
 from unittest.mock import patch
 
 import pandas as pd
-
 import pytest
 
 from src.views import generator_json_data
@@ -65,13 +63,13 @@ transactions = pd.DataFrame(
 @patch("src.views.filter_transactions_by_card")
 @patch("src.views.greeting")
 def test_views(
-        mock_views_greeting,
-        mock_views_filter_transactions_by_card,
-        mock_views_top_five_transactions,
-        mock_stocks,
-        mock_views_exchange_rates,
-        mock_views_stock_rates,
-):
+    mock_views_greeting,
+    mock_views_filter_transactions_by_card,
+    mock_views_top_five_transactions,
+    mock_stocks,
+    mock_views_exchange_rates,
+    mock_views_stock_rates,
+) -> None:
     mock_views_greeting.return_value = "Доброе утро!"
     mock_views_filter_transactions_by_card.return_value = {"cards_info": 1234}
     mock_views_top_five_transactions.return_value = {"transactions": 1234}
@@ -81,7 +79,7 @@ def test_views(
     assert generator_json_data(transactions, "06.07.2024 10:42:30") == expected_json
 
 
-def test_views_with_wrong_date():
+def test_views_with_wrong_date() -> None:
     with pytest.raises(Exception) as exc_info:
         generator_json_data(transactions, "ABC")
         assert str(exc_info.value) == []

@@ -1,20 +1,16 @@
+# -*- coding: utf-8 -*-
+
 import datetime as dt
-
 import json
-
-import requests
-
 import os
-
 from datetime import datetime
-
-from dotenv import load_dotenv
+from typing import Optional
 
 import pandas as pd
+import requests
+from dotenv import load_dotenv
 
 from src.logger import setting_logger
-
-from typing import Optional
 
 logger = setting_logger("utils")
 
@@ -158,7 +154,9 @@ def filter_transactions_by_card(df_transactions: pd.DataFrame) -> list[dict]:
     return expenses_cards
 
 
-def filter_transactions_by_date(transactions: pd.DataFrame, end_date: Optional[str] = None) -> pd.DataFrame:
+def filter_transactions_by_date(
+    transactions: pd.DataFrame, end_date: Optional[str | pd.DataFrame] = None
+) -> pd.DataFrame:
     """Функция, фильтрации транзакций по дате.Формат даты: %d.%m.%Y %H:%M:%S"""
     logger.info("Функция начала свою работу.")
     if end_date is None:
@@ -167,8 +165,9 @@ def filter_transactions_by_date(transactions: pd.DataFrame, end_date: Optional[s
     end_date = datetime.strptime(end_date, "%d.%m.%Y %H:%M:%S")
     transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S")
     filtered_transactions = transactions[
-        (transactions["Дата операции"] >= start_date) & (transactions["Дата операции"] <= end_date)]
+        (transactions["Дата операции"] >= start_date) & (transactions["Дата операции"] <= end_date)
+    ]
     pd.options.mode.chained_assignment = None
-    filtered_transactions["Дата операции"] = filtered_transactions["Дата операции"].dt.strftime('%d.%m.%Y %H:%M:%S')
+    filtered_transactions["Дата операции"] = filtered_transactions["Дата операции"].dt.strftime("%d.%m.%Y %H:%M:%S")
     logger.info("Функция успешно завершила свою работу.")
     return filtered_transactions
