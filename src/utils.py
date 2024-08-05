@@ -168,11 +168,7 @@ def filter_transactions_by_date(transactions: pd.DataFrame, end_date: Optional[s
     transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S")
     filtered_transactions = transactions[
         (transactions["Дата операции"] >= start_date) & (transactions["Дата операции"] <= end_date)]
+    pd.options.mode.chained_assignment = None
     filtered_transactions["Дата операции"] = filtered_transactions["Дата операции"].dt.strftime('%d.%m.%Y %H:%M:%S')
-
+    logger.info("Функция успешно завершила свою работу.")
     return filtered_transactions
-
-
-tr = read_xlsx_file("D:/My_Project/Course_project_1/data/operations.xlsx")
-
-filter_transactions_by_date(tr, "29.05.2018 23:00:00")

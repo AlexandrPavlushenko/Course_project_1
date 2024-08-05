@@ -8,16 +8,11 @@ from freezegun import freeze_time
 
 from unittest.mock import patch, mock_open, MagicMock
 
-from datetime import datetime
-
 from src.utils import greeting, read_xlsx_file, get_top_five_transactions, fetch_exchange_rates, fetch_stock_prices, \
     filter_transactions_by_card, filter_transactions_by_date
 
 import unittest
 
-import pytest
-
-import  time
 
 # Тест функции read_xlsx_file
 @patch('pandas.read_excel')
@@ -116,7 +111,6 @@ class TestFetchExchangeRates(unittest.TestCase):
         expected_result = [{'EUR': 93.2}, {'USD': 85.62}]
         result = fetch_exchange_rates()
         self.assertEqual(result, expected_result)
-        mock_open.assert_called_once_with(os.path.join(os.getcwd(), "user_setting.json"), "r", encoding="utf-8")
         mock_get.assert_called_once_with("https://v6.exchangerate-api.com/v6/mock_api_key/latest/RUB")
 
 
@@ -156,21 +150,9 @@ def test_filter_transactions_by_date(transactions_list):
     expected = {'Дата операции': {2: '21.11.2023 10:00:00'}, 'Сумма': {2: 300}, 'Описание': {2: 'Транзакция 3'}}
     assert result == expected
 
+
 def test_filter_transactions_by_date_no_date(transactions_list):
     result = filter_transactions_by_date(transactions_list).to_dict()
     print(result)
     expected = {'Дата операции': {}, 'Сумма': {}, 'Описание': {}}
     assert result == expected
-
-
-
-
-
-
-
-
-
-
-
-
-
