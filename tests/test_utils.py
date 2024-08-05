@@ -5,15 +5,8 @@ from unittest.mock import MagicMock, mock_open, patch
 import pandas as pd
 from freezegun import freeze_time
 
-from src.utils import (
-    fetch_exchange_rates,
-    fetch_stock_prices,
-    filter_transactions_by_card,
-    filter_transactions_by_date,
-    get_top_five_transactions,
-    greeting,
-    read_xlsx_file,
-)
+from src.utils import (fetch_exchange_rates, fetch_stock_prices, filter_transactions_by_card,
+                       filter_transactions_by_date, get_top_five_transactions, greeting, read_xlsx_file)
 
 
 # Тест функции read_xlsx_file

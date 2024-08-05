@@ -5,14 +5,8 @@ import json
 import pandas as pd
 
 from src.logger import setting_logger
-from src.utils import (
-    fetch_exchange_rates,
-    fetch_stock_prices,
-    filter_transactions_by_card,
-    filter_transactions_by_date,
-    get_top_five_transactions,
-    greeting
-)
+from src.utils import (fetch_exchange_rates, fetch_stock_prices, filter_transactions_by_card,
+                       filter_transactions_by_date, get_top_five_transactions, greeting)
 
 logger = setting_logger("views")
 
@@ -40,9 +34,3 @@ def generator_json_data(df_transactions: pd.DataFrame, date_filter: str) -> str:
     )
     logger.info("Функция успешно завершила свою работу.")
     return json_data
-
-
-# path_to_file = "../data/operations.xlsx"
-# df_transactions = read_xlsx_file(path_to_file)
-# date_filter = "20.05.2018 14:30:00"
-# print(generator_json_data(df_transactions, date_filter))
