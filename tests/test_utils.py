@@ -5,8 +5,15 @@ from unittest.mock import MagicMock, mock_open, patch
 import pandas as pd
 from freezegun import freeze_time
 
-from src.utils import (fetch_exchange_rates, fetch_stock_prices, filter_transactions_by_card,
-                       filter_transactions_by_date, get_top_five_transactions, greeting, read_xlsx_file)
+from src.utils import (
+    fetch_exchange_rates,
+    fetch_stock_prices,
+    filter_transactions_by_card,
+    filter_transactions_by_date,
+    get_top_five_transactions,
+    greeting,
+    read_xlsx_file,
+)
 
 
 # Тест функции read_xlsx_file
@@ -100,7 +107,9 @@ class TestFetchExchangeRates(unittest.TestCase):
     @patch("builtins.open", new_callable=mock_open, read_data='{"user_currencies": ["USD", "EUR"]}')
     @patch("os.getenv", return_value="mock_api_key")
     @patch("requests.get")
-    def test_fetch_exchange_rates(self, mock_get, mock_env, mock_open):
+    def test_fetch_exchange_rates(
+        self, mock_get: unittest.mock.MagicMock, mock_env: unittest.mock.MagicMock, mock_open: unittest.mock.MagicMock
+    ) -> None:
         mock_get.return_value.json.return_value = {"conversion_rates": {"RUB": 1, "EUR": 0.01073, "USD": 0.01168}}
         expected_result = [{"EUR": 93.2}, {"USD": 85.62}]
         result = fetch_exchange_rates()
@@ -113,7 +122,9 @@ class TestFetchStockPrices(unittest.TestCase):
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({"user_stocks": ["AAPL", "GOOGL"]}))
     @patch("os.getenv", side_effect=lambda k: "mock_api_key" if k == "API_KEY_STOCK_PRICE" else None)
     @patch("requests.get")
-    def test_fetch_stock_prices(self, mock_get, mock_env, mock_open):
+    def test_fetch_stock_prices(
+        self, mock_get: unittest.mock.MagicMock, mock_env: unittest.mock.MagicMock, mock_open: unittest.mock.MagicMock
+    ) -> None:
         mock_response = MagicMock()
         mock_response.json.return_value = {"Global Quote": {"05. price": "150.00"}}
         mock_get.return_value = mock_response
@@ -124,7 +135,7 @@ class TestFetchStockPrices(unittest.TestCase):
 
 
 # Тест функции filter_transactions_by_card
-def test_filter_transactions_by_card(sample_transactions):
+def test_filter_transactions_by_card(sample_transactions: pd.DataFrame) -> None:
     result = filter_transactions_by_card(sample_transactions)
 
     expected_result = [
@@ -135,14 +146,14 @@ def test_filter_transactions_by_card(sample_transactions):
 
 
 # Тест функции filter_transactions_by_date
-def test_filter_transactions_by_date(transactions_list):
+def test_filter_transactions_by_date(transactions_list: pd.DataFrame) -> None:
     result = filter_transactions_by_date(transactions_list, "30.11.2023 23:00:00").to_dict()
     expected = {"Дата операции": {2: "21.11.2023 10:00:00"}, "Сумма": {2: 300}, "Описание": {2: "Транзакция 3"}}
     assert result == expected
 
 
-def test_filter_transactions_by_date_no_date(transactions_list):
+def test_filter_transactions_by_date_no_date(transactions_list: pd.DataFrame) -> None:
     result = filter_transactions_by_date(transactions_list).to_dict()
     print(result)
-    expected = {"Дата операции": {}, "Сумма": {}, "Описание": {}}
+    expected: dict = {"Дата операции": {}, "Сумма": {}, "Описание": {}}
     assert result == expected

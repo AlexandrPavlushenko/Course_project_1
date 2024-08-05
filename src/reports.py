@@ -8,21 +8,19 @@ from typing import Any, Callable, Optional
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 
-from src.utils import read_xlsx_file
-
 from src.logger import setting_logger
 
 logger = setting_logger("reports")
 
 
-def save_to_file_decorator(filename: str = "../logs/log_file.json"):
+def save_to_file_decorator(filename: str = "../logs/log_file.json") -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def wrapper(*args, **kwargs) -> Any:
-            result = (func(*args, **kwargs))
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            result = func(*args, **kwargs)
             logger.info("Декоратор записывает полученный результат в файл.")
             with open(filename, "w", encoding="utf-8") as file:
-                json.dump(result.to_dict('records'), file, ensure_ascii=False, indent=2)
+                json.dump(result.to_dict("records"), file, ensure_ascii=False, indent=2)
             logger.info("Декоратор успешно завершил свою работу.")
             return result
 
@@ -42,16 +40,12 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
 
     transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S")
     sorted_transactions_by_date = transactions[
-        (transactions["Дата операции"] >= start_date) & (transactions["Дата операции"] <= end_date)]
+        (transactions["Дата операции"] >= start_date) & (transactions["Дата операции"] <= end_date)
+    ]
     pd.options.mode.chained_assignment = None
     sorted_transactions_by_date["Дата операции"] = sorted_transactions_by_date["Дата операции"].dt.strftime(
-        "%d.%m.%Y %H:%M:%S")
+        "%d.%m.%Y %H:%M:%S"
+    )
     sorted_transactions_by_category = sorted_transactions_by_date[sorted_transactions_by_date["Категория"] == category]
 
     return sorted_transactions_by_category
-
-
-if __name__ == "__main__":
-    tr = read_xlsx_file("../data/operations.xlsx")
-    spending_by_category(tr, "Переводы", "31.12.2021 23:00:00")
-

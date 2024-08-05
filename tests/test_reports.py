@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import os
 from unittest.mock import mock_open, patch
 
 import pandas as pd
-import pytest
 
 from src.reports import spending_by_category
 
 
-
-
-def test_spending_by_category(samp_transactions):
+def test_spending_by_category(samp_transactions: pd.DataFrame) -> None:
     df_transactions = pd.DataFrame(samp_transactions)
     current_datetime = "20.04.2023 12:00:00"
     category = "Еда"
@@ -28,4 +24,3 @@ def test_spending_by_category(samp_transactions):
     assert result == expected_result
 
     mock_open_func.assert_called_once_with("../logs/log_file.json", "w", encoding="utf-8")
-

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import unittest.mock
 from unittest.mock import patch
 
 import pandas as pd
@@ -63,12 +64,12 @@ transactions = pd.DataFrame(
 @patch("src.views.filter_transactions_by_card")
 @patch("src.views.greeting")
 def test_views(
-    mock_views_greeting,
-    mock_views_filter_transactions_by_card,
-    mock_views_top_five_transactions,
-    mock_stocks,
-    mock_views_exchange_rates,
-    mock_views_stock_rates,
+    mock_views_greeting: unittest.mock.Mock,
+    mock_views_filter_transactions_by_card: unittest.mock.Mock,
+    mock_views_top_five_transactions: unittest.mock.Mock,
+    mock_stocks: unittest.mock.Mock,
+    mock_views_exchange_rates: unittest.mock.Mock,
+    mock_views_stock_rates: unittest.mock.Mock,
 ) -> None:
     mock_views_greeting.return_value = "Доброе утро!"
     mock_views_filter_transactions_by_card.return_value = {"cards_info": 1234}

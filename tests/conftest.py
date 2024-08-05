@@ -5,7 +5,7 @@ import pytest
 
 
 @pytest.fixture
-def sample_transactions():
+def sample_transactions() -> pd.DataFrame:
     data = {
         "Номер карты": ["1234567812345678", "1234567812345678", "8765432187654321", "8765432187654321"],
         "Сумма платежа": [-1000, -2000, -1500, 3000],
@@ -14,7 +14,7 @@ def sample_transactions():
 
 
 @pytest.fixture
-def transactions_list():
+def transactions_list() -> pd.DataFrame:
     """Фикстура для создания тестового набора транзакций."""
     data = {
         "Дата операции": [
@@ -31,7 +31,7 @@ def transactions_list():
 
 
 @pytest.fixture
-def samp_transactions():
+def samp_transactions() -> list[dict]:
     return [
         {"Дата операции": "01.01.2023 12:00:00", "Категория": "Еда", "Сумма": 100},
         {"Дата операции": "15.02.2023 12:00:00", "Категория": "Транспорт", "Сумма": 50},
